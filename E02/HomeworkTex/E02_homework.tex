@@ -1,0 +1,170 @@
+\documentclass[a4paper, 11pt]{article}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{pythonhighlight}
+\usepackage[colorlinks,linkcolor=red]{hyperref}
+\geometry{scale=0.8}
+
+\title{	
+\normalfont \normalsize
+\textsc{School of Computer Science, Sun Yat-sen University} \\ [25pt] %textsc small capital letters
+\rule{\textwidth}{0.5pt} \\[0.4cm] % Thin top horizontal rule
+\huge  E2 15-Puzzle Problem (IDA*)\\ % The assignment title
+\rule{\textwidth}{2pt} \\[0.5cm] % Thick bottom horizontal rule
+\author{19335016 Haoran Chen}
+\date{\normalsize\today}
+}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\section{IDA* Algorithm}
+\subsection{Description}
+Iterative deepening A* (IDA*) was first described by Richard Korf in 1985, which is a graph traversal and path search algorithm that can find the shortest path between a designated start node and any member of a set of goal nodes in a weighted graph. 
+
+It is a variant of \textbf{iterative deepening depth-first search} that borrows the idea to use a heuristic function to evaluate the remaining cost to get to the goal from the \textbf{A* search algorithm}. 
+
+Since it is a depth-first search algorithm, its memory usage is lower than in A*, but unlike ordinary iterative deepening search, it concentrates on exploring the most promising nodes and thus does not go to the same depth everywhere in the search tree. 
+
+\textbf{Iterative-deepening-A* works as follows:} at each iteration, perform a depth-first search, cutting off a branch when its total cost $f(n)=g(n)+h(n)$ exceeds a given threshold. This threshold starts at the estimate of the cost at the initial state, and increases for each iteration of the algorithm. At each iteration, the threshold used for the next iteration is the minimum cost of all values that exceeded the current threshold.
+\subsection{Pseudocode}
+\begin{figure}[ht]
+\centering
+\includegraphics[width=17.3cm]{Pic/code}
+\end{figure}
+\section{Tasks}
+
+
+
+\begin{itemize}
+	\item Please solve 15-Puzzle problem by using IDA* (Python or C++). You can use one of the two commonly used heuristic functions: h1 = the number of misplaced tiles. h2 = the sum of the distances of the tiles from their goal positions. 
+	\item Here are 4 test cases for you to verify your algorithm correctness. You can also play this game (\texttt{15puzzle.exe}) for more information.
+	\begin{figure}[ht]
+	\centering
+	\includegraphics[width=8cm]{Pic/case1}
+	\quad
+	\includegraphics[width=8cm]{Pic/case2}
+	\\
+	\includegraphics[width=8cm]{Pic/case3}
+	\quad
+	\includegraphics[width=8cm]{Pic/case4}
+	
+	\end{figure}
+    
+    \item We encourage you to use better heuristic functions and compare efficiency of different functions, but that's not necessary.
+
+	\item Please send \texttt{E02\_YourNumber.pdf} to \texttt{ai\_course2021@163.com}, you can certainly use \texttt{E02\_15puzzle.tex} as the \LaTeX template.
+\end{itemize}
+
+
+\section{Methods}
+%%\lstset{language=C++}
+%%\lstset{language=Python}
+In this experiment, we use \texttt{IDA*} algorithm to solve 15 digital problems. In the selection of \texttt{H} function, we select the sum of the distances of the tiles from their goal positions.
+\begin{python}
+	def h2(a):
+	"""
+	@description  :the sum of the distances of the tiles from their goal positions.
+	---------
+	@param  :
+	a:Matrix
+	-------
+	@Returns  :
+	return h
+	-------
+	"""
+	#    aa = deepcopy(a)
+	ans = 0
+	for i in range(4):
+		for j in range(4):
+			ans = ans+abs(i-(a[i][j]-1) // 4)+abs(j-(a[i][j]-1) % 4)
+	pass
+	return ans
+\end{python}
+\begin{lstlisting}
+
+\end{lstlisting}
+\section{Results}
+%%\begin{figure}
+%%\centering
+%%\includegraphics[width=15cm]{result.png}
+%%\end{figure}
+Take matrix\texttt{[[5, 1, 3, 4],[9, 2, 7, 8],[13, 6, 10, 11],[14, 16, 15, 12]]} as an example.The result is below:
+
+\begin{figure}[ht]
+\includegraphics[width=5cm]{Pic/ex1}
+\includegraphics[width=5cm]{Pic/ex2}
+\includegraphics[width=5cm]{Pic/ex3}
+\end{figure}
+
+More results of examples put in the file \texttt{test1\_h2\_2.txt}, \texttt{test1\_h2\_3.txt}, \texttt{test1\_h2\_4.txt}.
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+
+\section{Source Code}
+\begin{python}
+	def search(path, cost, bound, heuristic):
+	global step
+
+	arr = path[-1]
+	f = cost + heuristic(arr)
+	
+	if f > bound:
+		return f, False
+	if is_goal(arr):
+		return f, True
+	
+	(bi, bj) = blank(arr)
+	min = 0x3f3f3f3f
+	
+	for d in ['U', 'L', 'D', 'R']:
+
+		newArr = tryy(arr, bi, bj, d)
+		if newArr == None:
+			continue
+		else:
+			if newArr not in path:
+				path.append(newArr)
+				t, flag = search(path, cost + 1, bound, heuristic)
+			if flag == True:
+				return t, True
+			if bound < min:
+				min = t
+			path.pop()
+		pass
+	
+	return min, False
+	
+	
+	def ida():
+	global step
+	bound = h2(matr)
+	path = [matr]
+	while True:
+	bound, flag = search(path, 0, bound, h2)
+	if flag == True:
+	break
+	if bound == 0x3f3f3f3f:
+	print("impossible!")
+	return
+	visial_path(path)
+
+	
+	ida()
+\end{python}
+
+%\clearpage
+%\bibliography{E:/Papers/LiuLab}
+%\bibliographystyle{apalike}
+\end{document} 
