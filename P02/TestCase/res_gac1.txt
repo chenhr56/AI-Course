@@ -1,0 +1,5 @@
+Number of Nodes Searched is 24
+Total Time is 1283 us
+
+Average Inference Time Per Node is 5.83333 us/node
+

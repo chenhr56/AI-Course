@@ -1,0 +1,3 @@
+Number of Nodes Searched is 378766
+Total Time is 144148188 us
+
